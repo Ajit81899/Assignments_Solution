@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>AJIT Project </title>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+
+<body>
+    <h1>AJIT Project </h1>
+
+
+    <button id="getDataButton">Click here Get Usrs</button>
+
+    <button id="generateCsvButton">Download File CSV</button>
+    <table id="dataTable" border="1">
+
+
+        <thead>
+
+
+            <tr>
+                <th>ID</th>
+                <th>Name</th>
+
+                <th>Username</th>
+                <th>Email</th>
+
+                <!-- s   -->
+                <th>Phone</th>
+
+                <th>Website</th>
+                <th>City</th>
+
+            </tr>
+        </thead>
+
+        
+        <tbody></tbody>
+    </table>
+
+    <script>
+        $(document).ready(function () {
+
+            // lan akj on click 
+            $("#getDataButton").click(function () {
+
+                $.ajax({
+                    type: "GET",
+                    url: "http://localhost:5000/get_users",  // Replace with the URL of your Flask API
+                    success: function (data) {
+                        // Clear the table body
+                        $("#dataTable tbody").empty();
+
+                        // Loop through the API response and populate the table
+                        for (var i = 0; i < data.length; i++) {
+                            var row = "<tr><td>" + data[i].id + "</td>" +
+                                "<td>" + data[i].name + "</td>" +
+                                "<td>" + data[i].username + "</td>" +
+                                "<td>" + data[i].email + "</td>" +
+                                "<td>" + data[i].phone + "</td>" +
+                                "<td>" + data[i].website + "</td>" +
+                                "<td>" + data[i].address.city + "</td></tr>";
+                            $("#dataTable tbody").append(row);
+                        }
+                    },
+                    error: function (error) {
+                        console.log(error);
+                        $("#dataTable tbody").empty();
+                        $("#dataTable tbody").append("<tr><td colspan='7'>Failed to retrieve data from the API.</td></tr>");
+                    }
+                });
+            });
+
+            $("#generateCsvButton").click(function () {
+                // i will call to download file
+                window.location.href = "http://localhost:5000/generate_csv"; // my efile download endpoint
+            });
+        });
+    </script>
+</body>
+
+</html>
